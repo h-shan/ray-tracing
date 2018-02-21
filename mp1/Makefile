@@ -14,7 +14,7 @@ $(EXENAME): $(OBJS)
 main.o: main.cpp
 	$(CXX) $< $(CXXFLAGS)
 
-lodepng.o: ../lodepng/lodepng.cpp ../lodepng/lodepng.h
+lodepng.o: ../pngutil/lodepng.cpp ../pngutil/lodepng.h
 	$(CXX) $< $(CXXFLAGS)
 
 clean:

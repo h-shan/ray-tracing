@@ -17,7 +17,7 @@ freely, subject to the following restrictions:
     distribution.
 */
 
-#include "../lodepng/lodepng.h"
+#include "../pngutil/lodepng.h"
 #include <iostream>
 
 /*
