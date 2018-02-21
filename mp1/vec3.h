@@ -1,3 +1,4 @@
+// code based on Peter Shirley's book "Ray Tracing in One Weekend"
 #ifndef VEC3_H
 #define VEC3_H
 
@@ -50,4 +51,4 @@ class vec3 {
     }
     inline vec3 unit() { return v / v.length(); }
 }
-
+#endif
