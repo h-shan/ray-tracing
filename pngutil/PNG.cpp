@@ -12,7 +12,7 @@
 #include <algorithm>
 #include "lodepng.h"
 #include "PNG.h"
-#include "RGB_HSL.h"
+#include "RGB_HSL.hpp"
 
 namespace pngutil {
   void PNG::_copy(PNG const & other) {
