@@ -1,6 +1,6 @@
 /**
  * @file PNG.cpp
- * Implementation of a simple PNG class using HSLAPixels and the lodepng PNG library.
+ * Implementation of a simple PNG class using RGBAPixels and the lodepng PNG library.
  *
  * @author CS 225: Data Structures
  *
@@ -12,7 +12,6 @@
 #include <algorithm>
 #include "lodepng.h"
 #include "PNG.h"
-#include "RGB_HSL.hpp"
 
 namespace pngutil {
   void PNG::_copy(PNG const & other) {
@@ -22,7 +21,7 @@ namespace pngutil {
     // Copy `other` to self
     width_ = other.width_;
     height_ = other.height_;
-    imageData_ = new HSLAPixel[width_ * height_];
+    imageData_ = new RGBAPixel[width_ * height_];
     for (unsigned i = 0; i < width_ * height_; i++) {
       imageData_[i] = other.imageData_[i];
     }
@@ -37,7 +36,7 @@ namespace pngutil {
   PNG::PNG(unsigned int width, unsigned int height) {
     width_ = width;
     height_ = height;
-    imageData_ = new HSLAPixel[width * height];
+    imageData_ = new RGBAPixel[width * height];
   }
 
   PNG::PNG(PNG const & other) {
@@ -59,10 +58,10 @@ namespace pngutil {
     if (height_ != other.height_) { return false; }
     
     for (unsigned i = 0; i < width_ * height_; i++) {
-      HSLAPixel & p1 = imageData_[i];
-      HSLAPixel & p2 = other.imageData_[i];
+      RGBAPixel & p1 = imageData_[i];
+      RGBAPixel & p2 = other.imageData_[i];
 
-      if (p1.h != p2.h || p1.s != p2.s || p1.l != p2.l || p1.a != p2.a) { return false; }
+      if (p1.r != p2.r || p1.g != p2.g || p1.b != p2.b || p1.a != p2.a) { return false; }
     }
 
     return true;
@@ -72,7 +71,7 @@ namespace pngutil {
     return !(*this == other);
   }
 
-  HSLAPixel * PNG::getPixel(unsigned int x, unsigned int y) {
+  RGBAPixel * PNG::getPixel(unsigned int x, unsigned int y) {
     if (width_ == 0 || height_ == 0) {
       cerr << "ERROR: Call to cs225::PNG::getPixel() made on an image with no pixels." << endl;
       cerr << "     : Returning NULL." << endl;
@@ -107,21 +106,14 @@ namespace pngutil {
     }
 
     delete[] imageData_;
-    imageData_ = new HSLAPixel[width_ * height_];
+    imageData_ = new RGBAPixel[width_ * height_];
 
     for (unsigned i = 0; i < byteData.size(); i += 4) {
-      rgbaColor rgb;
+      RGBAPixel & rgb = imageData_[i/4];
       rgb.r = byteData[i];
       rgb.g = byteData[i + 1];
       rgb.b = byteData[i + 2];
-      rgb.a = byteData[i + 3];
-
-      hslaColor hsl = rgb2hsl(rgb);
-      HSLAPixel & pixel = imageData_[i/4];
-      pixel.h = hsl.h;
-      pixel.s = hsl.s;
-      pixel.l = hsl.l;
-      pixel.a = hsl.a;
+      rgb.a = byteData[i + 3]; 
     }
 
     return true;
@@ -131,18 +123,10 @@ namespace pngutil {
     unsigned char *byteData = new unsigned char[width_ * height_ * 4];
 
     for (unsigned i = 0; i < width_ * height_; i++) {
-      hslaColor hsl;
-      hsl.h = imageData_[i].h;
-      hsl.s = imageData_[i].s;
-      hsl.l = imageData_[i].l;
-      hsl.a = imageData_[i].a;
-
-      rgbaColor rgb = hsl2rgb(hsl);
-
-      byteData[(i * 4)]     = rgb.r;
-      byteData[(i * 4) + 1] = rgb.g;
-      byteData[(i * 4) + 2] = rgb.b;
-      byteData[(i * 4) + 3] = rgb.a;
+      byteData[(i * 4)]     = imageData_[i].r;
+      byteData[(i * 4) + 1] = imageData_[i].g;
+      byteData[(i * 4) + 2] = imageData_[i].b;
+      byteData[(i * 4) + 3] = imageData_[i].a;
     }
 
     unsigned error = lodepng::encode(fileName, byteData, width_, height_);
@@ -164,15 +148,15 @@ namespace pngutil {
 
   void PNG::resize(unsigned int newWidth, unsigned int newHeight) {
     // Create a new vector to store the image data for the new (resized) image
-    HSLAPixel * newImageData = new HSLAPixel[newWidth * newHeight];
+    RGBAPixel * newImageData = new RGBAPixel[newWidth * newHeight];
 
     // Copy the current data to the new image data, using the existing pixel
     // for coordinates within the bounds of the old image size
     for (unsigned x = 0; x < newWidth; x++) {
       for (unsigned y = 0; y < newHeight; y++) {
         if (x < width_ && y < height_) {
-          HSLAPixel *oldPixel = this->getPixel(x, y);
-          HSLAPixel & newPixel = newImageData[ (x + (y * newWidth)) ];
+          RGBAPixel *oldPixel = this->getPixel(x, y);
+          RGBAPixel & newPixel = newImageData[ (x + (y * newWidth)) ];
           newPixel = *oldPixel;
         }
       }

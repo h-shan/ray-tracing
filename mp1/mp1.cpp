@@ -1,11 +1,11 @@
 #include "../pngutil/PNG.h"
-#include "../pngutil/HSLAPixel.h"
-#include "../pngutil/RGB_HSL.hpp"
-#include "../vec3.hpp"
-#include "../ray.hpp"
+#include "../pngutil/RGBAPixel.h"
+#include "../vec3.h"
+#include "../ray.h"
+#include <iostream>
 
 vec3 color(const ray& r) {
-  vec3 unit_direction = r.direction().unit();
+  vec3 unit_direction = r.direction().unit_vector();
   double t = (unit_direction.y() + 1.0) * 0.5;
   return vec3(1.0, 1.0, 1.0) * (1.0 - t) + vec3(0.5, 0.7, 1.0) * t;
 }
@@ -27,8 +27,14 @@ int main() {
       double v = double(j) / double(height);
       ray r(origin, lower_left_corner + horizontal*u + vertical*v);
       vec3 col = color(r);
-      *img.getPixel(i, j) = pngutil::rgb2hsl(int(255.99 * col[0]), int(255.99 * col[1]), int(255.99 * col[2]));
+      *img.getPixel(i, j) = pngutil::RGBAPixel(int(255.99 * col[0]), int(255.99 * col[1]), int(255.99 * col[2]));
     }
+  }
+
+  if (img.writeToFile("test.png")) {
+    cout << "Output saved to test.png" << endl;  
+  } else {
+    cout << "Could not write image" << endl; 
   }
   return 0;
 }

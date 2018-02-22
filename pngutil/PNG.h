@@ -9,7 +9,7 @@
 
 #include <string>
 #include <vector>
-#include "HSLAPixel.h"
+#include "RGBAPixel.h"
 
 using namespace std;
 
@@ -86,7 +86,7 @@ namespace pngutil {
       * @param y Y-coordinate for the pixel pointer to be grabbed from.
       * @return A pointer to the pixel at the given coordinates.
       */
-    HSLAPixel * getPixel(unsigned int x, unsigned int y);
+    RGBAPixel * getPixel(unsigned int x, unsigned int y);
 
     /**
       * Gets the width of this image.
@@ -112,7 +112,7 @@ namespace pngutil {
   private:
     unsigned int width_;            /*< Width of the image */
     unsigned int height_;           /*< Height of the image */
-    HSLAPixel *imageData_;          /*< Array of pixels */
+    RGBAPixel *imageData_;          /*< Array of pixels */
 
     /**
      * Copeies the contents of `other` to self
