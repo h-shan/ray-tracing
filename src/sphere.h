@@ -12,8 +12,8 @@ class sphere: public hitable {
     virtual bool hit(const ray &radius, double t_min, double t_max, hit_record &rec) const;
 
   private:
-    vec3 center_;
     double radius_;
+    vec3 center_;
 };
 
 #endif
