@@ -1,12 +1,16 @@
+#include <iostream>
+#include <float.h>
+#include <stdlib.h>
+#include <time.h>
+
 #include "pngutil/PNG.h"
 #include "pngutil/RGBAPixel.h"
 #include "vec3.h"
 #include "ray.h"
+#include "camera.h"
 #include "hitable.h"
 #include "sphere.h"
 #include "hitable_list.h"
-#include <iostream>
-#include "float.h"
 
 vec3 color(const ray& r, hitable *world) {
   hit_record rec;
@@ -19,10 +23,19 @@ vec3 color(const ray& r, hitable *world) {
   }
 }
 
+double randDouble() {
+  double d = rand();
+  if (d == RAND_MAX) {
+    d -= 1;
+  }
+  return d / RAND_MAX;
+}
+
 int main() {
+  srand (time(NULL));
   unsigned width = 200;
   unsigned height = 100;
-
+  
   pngutil::PNG img(width, height);
 
   vec3 lower_left_corner(-2.0, -1.0, -1.0);
@@ -34,12 +47,18 @@ int main() {
   list[1] = new sphere(vec3(0, -100.5, -1), 100);
   hitable *world = new hitable_list(list, 2);
 
+  camera cam;
   for (unsigned i = 0; i < width; i++) {
     for (unsigned j = 0; j < height; j++) {
       double u = double(i) / double(width);
       double v = double(j) / double(height);
-      ray r(origin, lower_left_corner + horizontal*u + vertical*v);
-      vec3 col = color(r, world);
+      vec3 col;
+      for (unsigned k = 0; k < 100; k++) {
+        ray r = cam.get_ray(u + randDouble() / width, v + randDouble() / height); 
+        col += color(r, world);
+      }
+      col /= 100;
+      
       *img.getPixel(i, j) = pngutil::RGBAPixel(int(255.99 * col[0]), int(255.99 * col[1]), int(255.99 * col[2]));
     }
   }

@@ -9,8 +9,8 @@ sphere::sphere() :
 {}
 
 sphere::sphere(vec3 cen, double radius) :
-  center_{cen},
-  radius_{radius}
+  radius_{radius},
+  center_{cen}
 {}
 
 bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec) const {
