@@ -1,16 +1,17 @@
-#ifndef LAMBERTIAN_H
-#define LAMBERTIAN_H
+#ifndef METAL_H
+#define METAL_H
 
 #include "material.h"
 
-class lambertian : public material {
+class metal : public material {
   public:
-    lambertian(const vec3 &vec);
+    metal(const vec3 &albedo);
     virtual bool scatter(const ray &r_in, const struct hit_record &rec, vec3 &attenuation, ray &scattered) const;
   
   private:
     vec3 albedo_;
+    vec3 _reflect(const vec3 &v, const vec3 &n) const;
 };
 
-#endif
 
+#endif
