@@ -1,6 +1,6 @@
 EXENAME = main
-OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o hitable_list.o camera.o lambertian.o metal.o random.o
-MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o hitable_list.o camera.o lambertian.o metal.o random.o
+OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o
+MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o
 CXX = clang++
 CXXFLAGS = -std=c++0x -c -g -O0 -Wall -Wextra
 LD = clang++
@@ -30,6 +30,9 @@ sphere.o: sphere.cpp sphere.h ray.h vec3.h hitable.h
 	$(CXX) $< $(CXXFLAGS)
 
 triangle.o: triangle.cpp triangle.h ray.h vec3.h hitable.h
+	$(CXX) $< $(CXXFLAGS)
+
+plane.o: plane.cpp plane.h
 	$(CXX) $< $(CXXFLAGS)
 
 hitable_list.o: hitable_list.cpp hitable_list.h hitable.h

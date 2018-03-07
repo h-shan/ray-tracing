@@ -9,6 +9,7 @@
 #include "hitable.h"
 #include "sphere.h"
 #include "triangle.h"
+#include "plane.h"
 #include "hitable_list.h"
 #include "random.h"
 #include "lambertian.h"
@@ -43,13 +44,14 @@ int main() {
   vec3 vertical(0.0, 2.0, 0.0);
   vec3 origin(0.0, 0.0, 0.0);
   hitable *list[5];
-  list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
-  list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
+  // list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
+  // list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
   //list[2] = new triangle(vec3(-1, 0, -1), vec3(-1, 1, -1), vec3(-1.5, -1, -2), new metal(vec3(0.5, 0.5, 1)));
-  list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2)));
-  list[3] = new sphere(vec3(-1, 0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8)));
-  
-  hitable *world = new hitable_list(list, 4);
+  // list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2)));
+  // list[3] = new sphere(vec3(-1, 0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8)));
+  list[0] = new plane(vec3(1, 1, -1), vec3(0, 1, 0.2), new lambertian(vec3(1, 0, 0))); 
+
+  hitable *world = new hitable_list(list, 1);
 
   camera cam;
   for (unsigned i = 0; i < width; i++) {

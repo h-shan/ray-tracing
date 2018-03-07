@@ -8,7 +8,7 @@ class sphere: public hitable {
   public:
     sphere();
     sphere(vec3 cen, double radius, material *mat);
-    virtual bool hit(const ray &radius, double t_min, double t_max, hit_record &rec) const;
+    virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const;
 
   private:
     double radius_;
