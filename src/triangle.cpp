@@ -1,10 +1,11 @@
 #include <cmath>
 #include "triangle.h"
 
-triangle::triangle(vec3 a, vec3 b, vec3 c) :
+triangle::triangle(vec3 a, vec3 b, vec3 c, material *mat) :
   a_{a},
   b_{b},
-  c_{c}
+  c_{c},
+  mat_{mat}
 {
   normal_ = (b-a).cross(c-a);
   area_ = normal_.length()/2;
@@ -54,7 +55,8 @@ bool triangle::hit(const ray &r, double t_min, double t_max, hit_record &rec) co
   rec.t = t;
   rec.p = p;
   rec.normal = normal_;
-  
+  rec.mat = mat_;
+
   return true;
 }
 
