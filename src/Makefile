@@ -1,6 +1,6 @@
 EXENAME = main
-OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o hitable_list.o camera.o
-MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o hitable_list.o camera.o
+OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o hitable_list.o camera.o
+MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o hitable_list.o camera.o
 CXX = clang++
 CXXFLAGS = -std=c++0x -c -g -O0 -Wall -Wextra
 LD = clang++
@@ -27,6 +27,9 @@ RGBAPixel.o: pngutil/RGBAPixel.cpp pngutil/RGBAPixel.h
 	$(CXX) $< $(CXXFLAGS)
 
 sphere.o: sphere.cpp sphere.h ray.h vec3.h hitable.h 
+	$(CXX) $< $(CXXFLAGS)
+
+triangle.o: triangle.cpp triangle.h ray.h vec3.h hitable.h
 	$(CXX) $< $(CXXFLAGS)
 
 hitable_list.o: hitable_list.cpp hitable_list.h hitable.h
