@@ -17,11 +17,11 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec) cons
   vec3 oc = r.origin() - center_;
   double a = r.direction().dot(r.direction());
   double b = 2 * r.direction().dot(oc);
-  double c = oc.dot(oc) - radius_;
+  double c = oc.dot(oc) - radius_ * radius_;
   double disc = b*b - 4*a*c;
   if (disc > 0) {
     double time = (-b - sqrt(disc)) / (2*a);
-    if (time >= t_min && time <= t_max) {
+    if (time > t_min && time < t_max) {
       rec.t = time;
       rec.p = r.point_at_parameter(time);
       rec.normal = (rec.p - center_).unit_vector();
@@ -29,7 +29,7 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec) cons
     }
 
     time = (-b + sqrt(disc)) / (2*a);
-    if (time >= t_min && time <= t_max) {
+    if (time > t_min && time < t_max) {
       rec.t = time;
       rec.p = r.point_at_parameter(time);
       rec.normal = (rec.p - center_).unit_vector();
