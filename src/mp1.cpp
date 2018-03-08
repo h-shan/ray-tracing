@@ -14,21 +14,34 @@
 #include "random.h"
 #include "lambertian.h"
 #include "metal.h"
+#include "light.h"
 
 vec3 color(const ray &r, hitable *world, double depth) {
+  // light from back left
+  light dir_light(vec3(1, -1 , -1), 1);
+
+  vec3 ambient_color = vec3(0.05, 0.05, 0.05);
   hit_record rec;
   if (world->hit(r, 0.01, DBL_MAX, rec)) {
     ray scattered;
-    vec3 attenuation;
-    if (depth < 50 && rec.mat->scatter(r, rec, attenuation, scattered)) {
+    vec3 albedo;
+    rec.mat->scatter(r, rec, albedo, scattered);
+    vec3 col = albedo * ambient_color;
+    vec3 light_dir = -dir_light.direction;
+    if (light_dir.dot(rec.normal) > 0) {
+      col += light_dir.dot(rec.normal) * dir_light.intensity * dir_light.color / M_PI * albedo;
+    }
+    return col;
+   /* if (depth < 50 && rec.mat->scatter(r, rec, attenuation, scattered)) {
       return attenuation * color(scattered, world, depth+1);
     } else {
       return vec3();
-    }
+    }*/
   } else {
     vec3 unit_direction = r.direction().unit_vector();
     double t = (unit_direction.y() + 1.0) * 0.5;
-    return (1.0 - t) * vec3(1.0, 1.0, 1.0) * (1.0 - t) + vec3(0.5, 0.7, 1.0) * t;
+    return vec3();
+    //return (1.0 - t) * vec3(1.0, 1.0, 1.0) * (1.0 - t) + vec3(0.5, 0.7, 1.0) * t;
   }
 }
 
@@ -44,14 +57,14 @@ int main() {
   vec3 vertical(0.0, 2.0, 0.0);
   vec3 origin(0.0, 0.0, 0.0);
   hitable *list[5];
-  // list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
+  list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
   // list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
-  //list[2] = new triangle(vec3(-1, 0, -1), vec3(-1, 1, -1), vec3(-1.5, -1, -2), new metal(vec3(0.5, 0.5, 1)));
+  list[1] = new triangle(vec3(-1, 0, -1), vec3(-1, 1, -1), vec3(-1.5, -1, -2), new metal(vec3(0.5, 0.5, 1)));
   // list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2)));
   // list[3] = new sphere(vec3(-1, 0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8)));
-  list[0] = new plane(vec3(1, 1, -1), vec3(0, 1, 0.2), new lambertian(vec3(1, 0, 0))); 
+ // list[0] = new plane(vec3(1, 1, -1), vec3(0, 1, 0.2), new lambertian(vec3(1, 0, 0))); 
 
-  hitable *world = new hitable_list(list, 1);
+  hitable *world = new hitable_list(list, 2);
 
   camera cam;
   for (unsigned i = 0; i < width; i++) {

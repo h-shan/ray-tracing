@@ -1,6 +1,6 @@
 EXENAME = main
-OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o
-MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o
+OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o light.o
+MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o light.o
 CXX = clang++
 CXXFLAGS = -std=c++0x -c -g -O0 -Wall -Wextra
 LD = clang++
@@ -14,7 +14,7 @@ $(EXENAME): $(OBJS)
 mp1: $(MP1_OBJS)
 	$(LD) $^ $(LDFLAGS) -o $@
 
-mp1.o: mp1.cpp pngutil/PNG.h pngutil/RGBAPixel.h ray.h vec3.h random.h camera.h
+mp1.o: mp1.cpp pngutil/PNG.h pngutil/RGBAPixel.h ray.h vec3.h random.h camera.h light.h
 	$(CXX) $< $(CXXFLAGS)
 
 PNG.o: pngutil/PNG.cpp pngutil/PNG.h pngutil/RGBAPixel.h pngutil/lodepng.h
@@ -48,6 +48,9 @@ metal.o: metal.cpp metal.h
 	$(CXX) $< $(CXXFLAGS)
 
 random.o: random.cpp random.h
+	$(CXX) $< $(CXXFLAGS)
+
+light.o: light.cpp light.h
 	$(CXX) $< $(CXXFLAGS)
 
 clean:
