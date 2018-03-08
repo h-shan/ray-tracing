@@ -55,6 +55,9 @@ bool triangle::hit(const ray &r, double t_min, double t_max, hit_record &rec) co
   rec.t = t;
   rec.p = p;
   rec.normal = normal_;
+  if (normal_.dot(r.direction()) > 0) {
+    rec.normal = -normal_;
+  }
   rec.mat = mat_;
 
   return true;

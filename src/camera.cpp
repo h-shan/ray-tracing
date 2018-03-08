@@ -10,5 +10,5 @@ camera::camera() {
 }
 
 ray camera::get_ray(double u, double v) {
-  return ray(origin, lower_left_corner + u*horizontal + v*vertical - origin);
+  return ray(origin, (lower_left_corner + u*horizontal + v*vertical - origin).unit_vector());
 }

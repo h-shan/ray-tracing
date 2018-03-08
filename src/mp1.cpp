@@ -16,32 +16,30 @@
 #include "metal.h"
 #include "light.h"
 
-vec3 color(const ray &r, hitable *world, double depth) {
+vec3 color(const ray &r, hitable *world) {
   // light from back left
   light dir_light(vec3(1, -1 , -1), 1);
 
   vec3 ambient_color = vec3(0.05, 0.05, 0.05);
   hit_record rec;
-  if (world->hit(r, 0.01, DBL_MAX, rec)) {
+  if (world->hit(r, 0.01, 5, rec)) {
+   // cout << rec.t << endl;
     ray scattered;
     vec3 albedo;
     rec.mat->scatter(r, rec, albedo, scattered);
-    vec3 col = albedo * ambient_color;
     vec3 light_dir = -dir_light.direction;
+    vec3 col;
+    vec3 diffuse_color;
     if (light_dir.dot(rec.normal) > 0) {
-      col += light_dir.dot(rec.normal) * dir_light.intensity * dir_light.color / M_PI * albedo;
+      diffuse_color = light_dir.dot(rec.normal) * dir_light.intensity * dir_light.color * albedo / M_PI;
+      hit_record temp;
+      bool visible = !world->hit(ray(rec.p, light_dir), 0.01, DBL_MAX, temp);
+      diffuse_color *= visible;
     }
+    col = albedo * ambient_color + diffuse_color;
     return col;
-   /* if (depth < 50 && rec.mat->scatter(r, rec, attenuation, scattered)) {
-      return attenuation * color(scattered, world, depth+1);
-    } else {
-      return vec3();
-    }*/
   } else {
-    vec3 unit_direction = r.direction().unit_vector();
-    double t = (unit_direction.y() + 1.0) * 0.5;
     return vec3();
-    //return (1.0 - t) * vec3(1.0, 1.0, 1.0) * (1.0 - t) + vec3(0.5, 0.7, 1.0) * t;
   }
 }
 
@@ -57,24 +55,22 @@ int main() {
   vec3 vertical(0.0, 2.0, 0.0);
   vec3 origin(0.0, 0.0, 0.0);
   hitable *list[5];
-  list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
-  // list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
-  list[1] = new triangle(vec3(-1, 0, -1), vec3(-1, 1, -1), vec3(-1.5, -1, -2), new metal(vec3(0.5, 0.5, 1)));
-  // list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2)));
-  // list[3] = new sphere(vec3(-1, 0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8)));
- // list[0] = new plane(vec3(1, 1, -1), vec3(0, 1, 0.2), new lambertian(vec3(1, 0, 0))); 
+  list[0] = new plane(vec3(0, 0.8, -1), vec3(0, -1, -0.2), new lambertian(vec3(1, 0, 0))); 
+  list[1] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
+  list[2] = new sphere(vec3(1, -0.5, -1), 0.5, new lambertian(vec3(0.3, 0.8, 0.3)));
+  list[3] = new triangle(vec3(-1, 0, -0.5), vec3(0, 1, -1), vec3(0.5, 0, -0.5), new lambertian(vec3(0, 0, 1)));
 
-  hitable *world = new hitable_list(list, 2);
+ hitable *world = new hitable_list(list, 4);
 
   camera cam;
-  for (unsigned i = 0; i < width; i++) {
-    for (unsigned j = 0; j < height; j++) {
+  for (unsigned j = 0; j < height; j++) {
+    for (unsigned i = 0; i < width; i++) {
       double u = double(i) / double(width);
       double v = double(height - 1 - j) / double(height);
       vec3 col;
       for (unsigned k = 0; k < 100; k++) {
         ray r = cam.get_ray(u + rand_double() / width, v + rand_double() / height); 
-        col += color(r, world, 0);
+        col += color(r, world);
       }
       col /= 100;
       col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));

@@ -12,9 +12,8 @@ class plane : public hitable {
     vec3 point_;
     vec3 normal_;
     material *mat_;
-    static constexpr double epsilon = 10e-8;
+    static constexpr double epsilon = 10e-6;
 };
-
 
 
 #endif
