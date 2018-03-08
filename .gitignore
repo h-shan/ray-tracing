@@ -1,3 +1,4 @@
 *.o
 *.png
 mp1
+.DS_Store

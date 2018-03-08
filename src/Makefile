@@ -1,6 +1,6 @@
 EXENAME = main
-OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o light.o
-MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o camera.o lambertian.o metal.o random.o light.o
+OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o perspective_camera.o orthogonal_camera.o lambertian.o metal.o random.o light.o
+MP1_OBJS = mp1.o lodepng.o PNG.o RGBAPixel.o sphere.o triangle.o plane.o hitable_list.o perspective_camera.o orthogonal_camera.o lambertian.o metal.o random.o light.o
 CXX = clang++
 CXXFLAGS = -std=c++0x -c -g -O0 -Wall -Wextra
 LD = clang++
@@ -38,7 +38,10 @@ plane.o: plane.cpp plane.h
 hitable_list.o: hitable_list.cpp hitable_list.h hitable.h
 	$(CXX) $< $(CXXFLAGS)
 
-camera.o: camera.cpp camera.h
+perspective_camera.o: perspective_camera.cpp perspective_camera.h camera.h
+	$(CXX) $< $(CXXFLAGS)
+
+orthogonal_camera.o: orthogonal_camera.cpp orthogonal_camera.h camera.h
 	$(CXX) $< $(CXXFLAGS)
 
 lambertian.o: lambertian.cpp lambertian.h material.h
