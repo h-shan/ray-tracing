@@ -1,8 +1,5 @@
 #include <cmath>
 #include "sphere.h"
-#include "ray.h"
-#include "vec3.h"
-#include "hitable.h"
 
 sphere::sphere() :
   radius_{1}
@@ -42,3 +39,9 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec) cons
   }
   return false;
 }
+
+bool sphere::bounding_box(double t0, double t1, aabb &box) const {
+  box = aabb(center_ - vec3(radius_, radius_, radius_), center_ + vec3(radius_, radius_, radius_));
+  return true;
+}
+

@@ -19,11 +19,11 @@
 
 vec3 color(const ray &r, hitable *world) {
   // light from back left
-  light dir_light(vec3(1, -1 , -1), 1);
+  light dir_light(vec3(1, -1 , 0), 1);
 
   vec3 ambient_color = vec3(0.05, 0.05, 0.05);
   hit_record rec;
-  if (world->hit(r, 0.01, 5, rec)) {
+  if (world->hit(r, 0.01, 50, rec)) {
    // cout << rec.t << endl;
     ray scattered;
     vec3 albedo;
@@ -38,6 +38,7 @@ vec3 color(const ray &r, hitable *world) {
       diffuse_color *= visible;
     }
     col = albedo * ambient_color + diffuse_color;
+    // col = diffuse_color;
     return col;
   } else {
     return vec3();
@@ -57,10 +58,10 @@ int main() {
   vec3 vertical(0.0, 2.0, 0.0);
   vec3 origin(0.0, 0.0, 0.0);
   hitable *list[5];
-  list[0] = new plane(vec3(0, 0.8, -1), vec3(0, -1, -0.2), new lambertian(vec3(1, 0, 0))); 
+  list[0] = new plane(vec3(0, -0.8, 1), vec3(0, 1, 0.02), new lambertian(vec3(1, 0, 0))); 
   list[1] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
   list[2] = new sphere(vec3(1, -0.5, -1), 0.5, new lambertian(vec3(0.3, 0.8, 0.3)));
-  list[3] = new triangle(vec3(-1, 0, -0.5), vec3(0, 1, -1), vec3(0.5, 0, -0.5), new lambertian(vec3(0, 0, 1)));
+  list[3] = new triangle(vec3(-1.5, 0, -1.2), vec3(0, 0.2, -0.5), vec3(-0.6, 1, -1), new lambertian(vec3(0, 0, 1)));
 
   hitable *world = new hitable_list(list, 4);
 

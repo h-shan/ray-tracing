@@ -23,3 +23,8 @@ bool hitable_list::hit(const ray &r, double t_min, double t_max, hit_record &rec
   }
   return hit_target;
 }
+
+
+bool hitable_list::bounding_box(double t0, double t1, aabb &box) const {
+  return true;
+}

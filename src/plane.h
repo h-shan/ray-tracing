@@ -7,7 +7,7 @@ class plane : public hitable {
   public:
     plane(vec3 point, vec3 normal, material *mat);
     virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const;
-  
+    virtual bool bounding_box(double t0, double t1, aabb &box) const;
   private:
     vec3 point_;
     vec3 normal_;

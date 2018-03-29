@@ -12,12 +12,13 @@ bool plane::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
   double denom = r.direction().dot(normal_);
   // std::cout << denom << std::endl;
   // std::cout << r.direction() << std::endl;
-  if (denom < epsilon) {
+  if (fabs(denom) < epsilon) {
     return false;
   }
   vec3 normal = normal_;
   if (denom > 0) {
     normal = -normal_;
+    denom = -denom;
   }
   double t = (point_ - r.origin()).dot(normal) / denom;
   if (t <= t_min || t >= t_max) {
@@ -30,3 +31,6 @@ bool plane::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
   return true;
 }
 
+bool plane::bounding_box(double t0, double t1, aabb &box) const {
+  return true;
+}

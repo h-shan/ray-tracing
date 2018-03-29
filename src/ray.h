@@ -13,6 +13,11 @@ class ray {
     vec3 point_at_parameter(double t) const { return A + B * t; }
     vec3 A;
     vec3 B;
+    double time() { return _time; }
+
+  private:
+    double _time;
+
 };
 
 #endif
