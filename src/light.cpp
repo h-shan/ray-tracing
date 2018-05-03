@@ -5,5 +5,5 @@ light::light(const vec3 &dir, double intensity) :
   intensity{intensity}
 {
   direction = dir;
-  direction.unit_vector();
+  direction.make_unit_vector();
 }

@@ -3,7 +3,7 @@
 
 class orthogonal_camera {
   public:
-    orthogonal_camera(double z = 0);
+    orthogonal_camera(double z = 1);
     ray get_ray(double u, double v) const;
   private:
     double z_;

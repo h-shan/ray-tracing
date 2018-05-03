@@ -15,6 +15,7 @@ class triangle : public hitable {
     vec3 c_;
     vec3 normal_;
     material *mat_;
+    aabb b_box_;
     static constexpr const double epsilon = 1.0e-8;
 };
 
